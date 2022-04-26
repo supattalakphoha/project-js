@@ -59,9 +59,10 @@
               <router-link to="/CreateAccount">สร้างบัญชีผูัใช้งาน</router-link>
             </div>
             <div class="flex md4" style="text-align: right;">
-              <router-link to="/userManagement">
+              <!-- <router-link to="/userManagement">
                 <va-button>เข้าสู่ระบบ</va-button>
-              </router-link>
+              </router-link> -->
+              <va-button @click="Login">เข้าสู่ระบบ</va-button>
             </div>
             <div class="flex md2"></div>
           </div>
@@ -73,13 +74,50 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+import axios from 'axios'
 export default {
   name: 'LogIn',
   components: {},
   data: () => ({
     userName: '',
     password: '',
+    //urlBackend: 'http://localhost:3000',
+    urlBackend: 'https://jet44.app.ruk-com.cloud',
   }),
+  methods: {
+    Login() {
+      console.log(this.userName)
+      console.log(this.password)
+      axios
+        .get(
+          this.urlBackend + '/login/' + this.userName + '/' + this.password,
+          {
+            headers: { 'Access-Control-Allow-Origin': '*' },
+          },
+        )
+        .then((response) => {
+          console.log('-----------------------------', response.data.data)
+          let userObj = response.data.data
+          if (userObj != undefined && userObj != '') {
+            console.log('ผ่าน')
+            this.$router.push({ name: 'UserManagement' })
+          } else {
+            console.log('ไม่ผ่าน')
+            Swal.fire(
+              'มีข้อผิดพลาด',
+              'ไม่พบผู้ใช้งานหรือusernameและpasswordไม่ถูกต้อง',
+              'error',
+            )
+          }
+        })
+
+        .catch((error) => {
+          Swal.fire('มีข้อผิดพลาด', error.message, 'error')
+          console.log(error)
+        })
+    },
+  },
 }
 </script>
 

@@ -97,7 +97,7 @@ export default {
   methods: {
     getUserList() {
       axios
-        .get('http://localhost:3000/userList', {
+        .get('https://jet44.app.ruk-com.cloud/userList', {
           headers: { 'Access-Control-Allow-Origin': '*' },
         })
         .then((response) => {
@@ -107,6 +107,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+          Swal.fire('มีข้อผิดพลาด', error.message, 'error')
         })
     },
     filterExact(source) {
